@@ -1,0 +1,56 @@
+---
+import { languages, t, type Lang } from '../i18n';
+import { url } from '../site';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const w = d.downloads;
+
+// File names follow excavator-vr-<doc>-<lang>.pdf; they are made by `npm run pdf`.
+const docs = [
+  { id: 'brochure', pages: 4 },
+  { id: 'fleet', pages: 2 },
+  { id: 'controls', pages: 1 },
+] as const;
+const file = (id: string, l: string) => url(`downloads/excavator-vr-${id}-${l}.pdf`);
+---
+
+<section class="sec downloads" id="downloads">
+  <SectionHead n="10" kicker={w.kicker} title={w.title} />
+  <ul class="docs">
+    {
+      docs.map((doc, i) => (
+        <li class="doc" data-reveal style={`--i:${i}`}>
+          <a class="doc__main" href={file(doc.id, lang)} download>
+            <span class="doc__n">PDF</span>
+            <span class="doc__t">{w.items[doc.id][0]}</span>
+            <span class="doc__d">{w.items[doc.id][1]}</span>
+            <span class="doc__p">
+              {doc.pages} {doc.pages === 1 ? w.page : w.pages}
+            </span>
+            <svg class="doc__a" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 3v14m0 0-6-6m6 6 6-6M4 21h16" fill="none" stroke="currentColor" stroke-width="1.8" />
+            </svg>
+            <span class="sr">{w.btn}</span>
+          </a>
+          <p class="doc__also">
+            {w.also}:
+            {
+              languages
+                .filter((l) => l !== lang)
+                .map((l) => (
+                  <a href={file(doc.id, l)} hreflang={l} download>
+                    {l.toUpperCase()}
+                  </a>
+                ))
+            }
+          </p>
+        </li>
+      ))
+    }
+  </ul>
+</section>

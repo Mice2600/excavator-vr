@@ -1,0 +1,22 @@
+[
+ {"machine": "Excavator", "pose": {"boom": 24, "stick": 96, "bucket": 10},
+  "shots": [
+   {"out": "renders/cab_ex20.png", "eye": "Seat_Eye", "eye_offset": [0.0, -0.10, 0.16], "look": [-0.80, 1.05, 1.60], "lens": 27, "w": 2400, "h": 1800, "samples": 200,
+    "rig": "cab", "transparent": false, "world": 0.04, "hide": ["Seat"], "light_box": ["CabInterior"],
+    "marks": {"joyL": [-1.12, 0.71, 1.88], "joyR": [-0.48, 0.71, 1.88], "travel": [-0.80, 0.97, 1.90], "pedals": [-0.80, 1.16, 1.36], "monitor": [-0.51, 1.06, 2.04], "switches": [-0.48, 0.83, 1.71], "dial": [-0.48, 0.56, 1.72], "switchesL": [-1.12, 0.60, 1.71]}},
+   {"out": "renders/cab_ex20_joystick.png", "eye": [-0.74, 0.36, 2.08], "look": [-0.48, 0.72, 1.86], "lens": 50, "w": 1600, "h": 1600, "samples": 180, "fstop": 2.8,
+    "rig": "cab", "transparent": false, "world": 0.04, "hide": ["Seat"], "light_box": ["CabInterior"]},
+   {"out": "renders/cab_ex20_monitor.png", "eye": [-0.74, 0.60, 2.16], "look": [-0.51, 1.06, 2.03], "lens": 62, "w": 1600, "h": 1600, "samples": 180, "fstop": 4.0,
+    "rig": "cab", "transparent": false, "world": 0.04, "hide": ["Seat"], "light_box": ["CabInterior"]}
+  ]},
+ {"machine": "DumpTruck",
+  "shots": [
+   {"out": "renders/cab_truck.png", "eye": "Seat_Eye", "eye_offset": [0.14, -0.14, 0.06], "look": [-0.36, 2.56, 1.84], "lens": 15, "w": 2560, "h": 1600, "samples": 200, "light": 1.35,
+    "rig": "cab", "transparent": false, "world": 0.04, "hide": ["Seats"], "light_box": ["CabInterior"],
+    "marks": {"wheel": [-0.60, 2.36, 2.05], "cluster": [-0.60, 2.578, 2.012], "stack": [0.0, 2.53, 1.85], "rockers": [0.0, 2.538, 1.72], "brake": [-0.24, 2.47, 1.92], "gear": [-0.16, 2.15, 2.02], "pedals": [-0.63, 2.50, 1.45]}},
+   {"out": "renders/cab_truck_gauges.png", "eye": [-0.60, 1.98, 2.24], "look": [-0.60, 2.578, 2.03], "lens": 44, "w": 1600, "h": 1600, "samples": 180, "fstop": 4.0, "light": 1.35,
+    "rig": "cab", "transparent": false, "world": 0.04, "hide": ["Seats"], "light_box": ["CabInterior"]},
+   {"out": "renders/cab_truck_gear.png", "eye": [-0.34, 1.86, 2.30], "look": [-0.08, 2.46, 1.78], "lens": 36, "w": 1600, "h": 1600, "samples": 180, "fstop": 4.0, "light": 1.35,
+    "rig": "cab", "transparent": false, "world": 0.04, "hide": ["Seats"], "light_box": ["CabInterior"]}
+  ]}
+]

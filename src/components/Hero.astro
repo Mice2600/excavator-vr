@@ -1,0 +1,58 @@
+---
+import { Picture } from 'astro:assets';
+import { t, type Lang } from '../i18n';
+import { img } from '../images';
+import { url } from '../site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+---
+
+<section class="hero" id="top">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="hero__type">
+    <p class="eyebrow" data-rise style="--i:0">{d.hero.eyebrow}</p>
+    <h1 class="hero__h1">
+      <span class="hero__l1" data-rise style="--i:1">{d.hero.h1a}</span>
+      <span class="hero__l2" data-rise style="--i:2">{d.hero.h1b}</span>
+    </h1>
+  </div>
+  <div class="hero__machine" data-hero-machine>
+    <Picture
+      src={img('hero_reach')}
+      formats={['avif', 'webp']}
+      widths={[720, 1080, 1440, 1920, 2400, 2800]}
+      sizes="(max-width: 760px) 150vw, 96vw"
+      alt={d.hero.alt}
+      loading="eager"
+      fetchpriority="high"
+      quality={62}
+    />
+  </div>
+  <div class="hero__copy">
+    <p class="hero__lead" data-rise style="--i:3">{d.hero.lead}</p>
+    <div class="hero__cta" data-rise style="--i:4">
+      <a class="btn btn--solid" href="#film">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"></path></svg>
+        {d.hero.cta1}
+      </a>
+      <a class="btn" href={url(`downloads/excavator-vr-brochure-${lang}.pdf`)} download>
+        {d.hero.cta2}
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v9m0 0L4 7m4 4 4-4M3 14h10" fill="none" stroke="currentColor" stroke-width="1.6"></path></svg>
+      </a>
+    </div>
+  </div>
+  <dl class="facts" data-rise style="--i:5">
+    {
+      d.hero.facts.map(([v, l]) => (
+        <div class="facts__i">
+          <dt>{v}</dt>
+          <dd>{l}</dd>
+        </div>
+      ))
+    }
+  </dl>
+</section>

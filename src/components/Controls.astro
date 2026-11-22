@@ -1,0 +1,132 @@
+---
+import { layers, LOOSE_COLOR } from '../data/machines';
+import { t, type Lang } from '../i18n';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const c = d.controls;
+
+const data = {
+  locale: d.locale,
+  unit: d.units.m3,
+  air: c.air,
+  loose: c.loose,
+  looseColor: LOOSE_COLOR,
+  truckFull: c.truckFull,
+  overTruck: c.overTruck,
+  layers: layers.map((l) => ({
+    top: l.top,
+    bottom: l.bottom,
+    strength: l.strength,
+    color: l.color,
+    name: d.ground.layers[l.id][0],
+  })),
+};
+---
+
+<section class="sec controls" id="controls">
+  <SectionHead n="04" kicker={c.kicker} title={c.title} />
+
+  <div class="modes">
+    <article class="mode" data-reveal style="--i:0">
+      <svg class="mode__icon" viewBox="0 0 120 80" aria-hidden="true">
+        <path class="ln" d="M14 62c20-6 32-22 44-40"></path>
+        <path class="ln ln--dash" d="M58 22c12 4 22 12 30 26"></path>
+        <circle class="dot" cx="58" cy="22" r="5"></circle>
+        <path class="fill" d="M84 44l18 2-4 18-16-6z"></path>
+        <path class="ln" d="M22 30c4-8 14-10 20-4l8 8-10 12-14-4c-6-2-7-7-4-12z"></path>
+      </svg>
+      <h3>{c.smart.t}</h3>
+      <p>{c.smart.d}</p>
+    </article>
+    <article class="mode" data-reveal style="--i:1">
+      <svg class="mode__icon" viewBox="0 0 120 80" aria-hidden="true">
+        <circle class="ln" cx="34" cy="42" r="22"></circle>
+        <circle class="ln" cx="86" cy="42" r="22"></circle>
+        <path class="ln ln--dash" d="M34 26v32M18 42h32M86 26v32M70 42h32"></path>
+        <circle class="dot" cx="40" cy="34" r="6"></circle>
+        <circle class="dot" cx="86" cy="50" r="6"></circle>
+      </svg>
+      <h3>{c.classic.t}</h3>
+      <p>{c.classic.d}</p>
+    </article>
+  </div>
+
+  <div class="toy" data-toy data-reveal>
+    <script type="application/json" set:html={JSON.stringify(data)} />
+    <header class="toy__head">
+      <h3>{c.tryTitle}</h3>
+      <p>{c.tryLead}</p>
+    </header>
+
+    <div class="toy__screen">
+      <canvas class="toy__canvas" data-canvas width="1280" height="560" aria-label={c.tryTitle} role="img"></canvas>
+      <div class="toy__hud">
+        <p>
+          <span>{c.hudBucket}</span>
+          <span class="meter"><i data-hud="bucket"></i></span>
+          <b data-hud="bucket-v">0 %</b>
+        </p>
+        <p>
+          <span>{c.hudTruck}</span>
+          <span class="meter"><i data-hud="truck"></i></span>
+          <b data-hud="truck-v">0</b>
+        </p>
+        <p>
+          <span>{c.hudPump}</span>
+          <span class="meter meter--hot"><i data-hud="pump"></i></span>
+        </p>
+        <p class="toy__layer">
+          <span>{c.hudLayer}</span>
+          <b data-hud="layer">{c.air}</b>
+        </p>
+      </div>
+      <figure class="toy__top">
+        <canvas data-top width="220" height="220" aria-hidden="true"></canvas>
+        <figcaption>{c.top}</figcaption>
+      </figure>
+      <p class="toy__msg" data-msg hidden></p>
+    </div>
+
+    <div class="toy__deck">
+      <div class="pad" data-pad="left">
+        <p class="pad__t">{c.left}</p>
+        <div class="pad__base" tabindex="0" role="application" aria-label={c.left}>
+          <span class="pad__knob" data-knob></span>
+        </div>
+        <ul class="pad__legend">
+          <li><kbd data-key="KeyW">W</kbd>{c.stickOut}</li>
+          <li><kbd data-key="KeyS">S</kbd>{c.stickIn}</li>
+          <li><kbd data-key="KeyA">A</kbd>{c.swingL}</li>
+          <li><kbd data-key="KeyD">D</kbd>{c.swingR}</li>
+        </ul>
+      </div>
+      <div class="toy__mid">
+        <button class="btn btn--line btn--small" type="button" data-reset>{c.reset}</button>
+      </div>
+      <div class="pad" data-pad="right">
+        <p class="pad__t">{c.right}</p>
+        <div class="pad__base" tabindex="0" role="application" aria-label={c.right}>
+          <span class="pad__knob" data-knob></span>
+        </div>
+        <ul class="pad__legend">
+          <li><kbd data-key="KeyI">I</kbd>{c.boomDown}</li>
+          <li><kbd data-key="KeyK">K</kbd>{c.boomUp}</li>
+          <li><kbd data-key="KeyJ">J</kbd>{c.curl}</li>
+          <li><kbd data-key="KeyL">L</kbd>{c.dump}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="assists" data-reveal>
+    <h3>{c.assistsTitle}</h3>
+    <ul>
+      {c.assists.map((a) => <li>{a}</li>)}
+    </ul>
+  </div>
+</section>

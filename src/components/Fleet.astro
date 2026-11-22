@@ -1,0 +1,180 @@
+---
+import { Picture } from 'astro:assets';
+import { machines } from '../data/machines';
+import sideviews from '../data/sideviews.json';
+import { num, specValue, t, type Lang } from '../i18n';
+import { img } from '../images';
+import { url } from '../site';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const side = sideviews as Record<string, { length: number; height: number; w: number; h: number }>;
+const PERSON = 1.75;
+const label = (key: string) => d.spec[key as keyof typeof d.spec];
+---
+
+<section class="sec fleet" id="fleet" data-fleet style={`--accent:${machines[0].accent}`}>
+  <SectionHead n="02" kicker={d.fleet.kicker} title={d.fleet.title} lead={d.fleet.lead} wide />
+
+  <div class="fleet__tabs" role="tablist" aria-label={d.fleet.pick} data-reveal>
+    {
+      machines.map((m, i) => (
+        <button
+          class="fleet__tab"
+          role="tab"
+          id={`tab-${m.id}`}
+          aria-controls={`panel-${m.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          data-tab={m.id}
+          data-accent={m.accent}
+          style={`--accent:${m.accent}`}
+        >
+          <Picture
+            src={img(`${m.id}_side`)}
+            formats={['avif', 'webp']}
+            widths={[160, 320]}
+            sizes="120px"
+            alt=""
+            loading="lazy"
+            quality={55}
+          />
+          <span>{d.fleet.short[m.id]}</span>
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="fleet__stage">
+    {
+      machines.map((m, i) => (
+        <article
+          class="fleet__panel"
+          role="tabpanel"
+          id={`panel-${m.id}`}
+          aria-labelledby={`tab-${m.id}`}
+          data-panel={m.id}
+          hidden={i !== 0}
+          style={`--accent:${m.accent}`}
+        >
+          <p class="fleet__ghost" aria-hidden="true">
+            {d.fleet.short[m.id]}
+          </p>
+          <div class="fleet__pic" data-pic>
+            <Picture
+              src={img(`${m.id}_34`)}
+              formats={['avif', 'webp']}
+              widths={[640, 960, 1400, 2000]}
+              sizes="(max-width: 1000px) 96vw, 58vw"
+              alt={d.fleet.names[m.id][0]}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              quality={62}
+            />
+          </div>
+          <div class="fleet__info">
+            <h3 class="fleet__name">{d.fleet.names[m.id][0]}</h3>
+            <p class="fleet__tag">{d.fleet.names[m.id][1]}</p>
+            <dl class="fleet__big">
+              {
+                m.headline.map((s) => {
+                  const v = specValue(d, s);
+                  return (
+                    <div>
+                      <dt>{label(s.key)}</dt>
+                      <dd>
+                        {v.value}
+                        <small>{v.unit}</small>
+                      </dd>
+                    </div>
+                  );
+                })
+              }
+            </dl>
+            <table class="spec">
+              <caption>{d.fleet.specs}</caption>
+              <tbody>
+                {
+                  m.specs.map((s) => {
+                    const v = specValue(d, s);
+                    return (
+                      <tr>
+                        <th scope="row">{label(s.key)}</th>
+                        <td>
+                          {v.value}
+                          {v.unit && <small>{s.unit === 'deg' ? v.unit : ` ${v.unit}`}</small>}
+                        </td>
+                      </tr>
+                    );
+                  })
+                }
+              </tbody>
+            </table>
+            <button
+              class="btn btn--line"
+              type="button"
+              data-3d={url(`models/${m.model}`)}
+              data-label-open={d.fleet.view3d}
+              data-label-close={d.fleet.close3d}
+              data-label-loading={d.fleet.loading3d}
+              data-hint={d.fleet.view3dHint}
+              data-alt={d.fleet.names[m.id][0]}
+            >
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  d="M8 1.5 14 5v6l-6 3.5L2 11V5zM2 5l6 3.5L14 5M8 8.5v6"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.3"
+                />
+              </svg>
+              <span>{d.fleet.view3d}</span>
+            </button>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+
+  <div class="lineup" data-reveal>
+    <h3 class="lineup__t">{d.fleet.scaleTitle}</h3>
+    <div class="lineup__scroll">
+      <div class="lineup__row">
+        <figure class="lineup__m lineup__person" style={`--len:0.62;--ratio:${0.62 / PERSON}`}>
+          <svg viewBox="0 0 62 175" aria-hidden="true">
+            <circle cx="31" cy="14" r="12"></circle>
+            <path d="M14 34h34l6 60h-9l-3-38-2 119H32l-1-70-1 70h-9l-2-119-3 38H7z"></path>
+          </svg>
+          <figcaption>{num(d, PERSON, 2)} {d.units.m}</figcaption>
+        </figure>
+        {
+          machines.map((m) => (
+            <figure
+              class="lineup__m"
+              style={`--len:${side[m.id].length};--ratio:${side[m.id].w / side[m.id].h};--accent:${m.accent}`}
+              data-jump={m.id}
+            >
+              <Picture
+                src={img(`${m.id}_side`)}
+                formats={['avif', 'webp']}
+                widths={[400, 800, 1400, 2200]}
+                sizes={`${Math.round(side[m.id].length * 14)}px`}
+                alt={d.fleet.names[m.id][0]}
+                loading="lazy"
+                quality={58}
+              />
+              <figcaption>
+                <b>{d.fleet.short[m.id]}</b>
+                {num(d, side[m.id].length, 1)} {d.units.m}
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+    <p class="lineup__note">{d.fleet.scaleNote}</p>
+  </div>
+</section>

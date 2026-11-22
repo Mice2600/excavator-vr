@@ -1,0 +1,145 @@
+---
+import { Picture } from 'astro:assets';
+import cabs from '../data/cabs.json';
+import { t, type Lang } from '../i18n';
+import { img } from '../images';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  lang: Lang;
+  n: string;
+}
+const { lang, n } = Astro.props;
+const d = t(lang);
+const c = d.cab;
+const marks = cabs as Record<string, Record<string, [number, number]>>;
+// Small shifts, in fractions of the picture, where two controls would put their numbers on top of each other.
+const nudge: Record<string, [number, number]> = {
+  'truck.wheel': [-0.075, 0.055],
+  'truck.cluster': [0.0, -0.035],
+  'truck.stack': [0.012, -0.03],
+  'truck.brake': [-0.012, 0.0],
+  'truck.rockers': [0.045, 0.012],
+  'truck.gear': [0.0, 0.04],
+};
+const place = (key: string, id: string): [number, number] | undefined => {
+  const at = marks[key]?.[id];
+  const by = nudge[`${key}.${id}`] ?? [0, 0];
+  return at && [at[0] + by[0], at[1] + by[1]];
+};
+
+// Each cab: its wide picture, the numbered controls, and two close-ups.
+const panels = [
+  {
+    key: 'ex' as const,
+    picture: 'cab_ex20',
+    items: c.ex,
+    details: [
+      ['cab_ex20_joystick', c.ex[1].t],
+      ['cab_ex20_monitor', c.ex[4].t],
+    ],
+  },
+  {
+    key: 'truck' as const,
+    picture: 'cab_truck',
+    items: c.truck,
+    details: [
+      ['cab_truck_gauges', c.truck[1].t],
+      ['cab_truck_gear', c.truck[4].t],
+    ],
+  },
+];
+---
+
+<section class="sec cab" id="cab" data-cab>
+  <SectionHead n={n} kicker={c.kicker} title={c.title} lead={c.lead} wide />
+  <div class="cab__tabs" role="tablist" data-reveal>
+    {
+      panels.map((p, i) => (
+        <button
+          role="tab"
+          type="button"
+          id={`cabtab-${p.key}`}
+          aria-controls={`cab-${p.key}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+          data-cabtab={p.key}
+        >
+          {c.tabs[p.key]}
+        </button>
+      ))
+    }
+    <span class="cab__hint">{c.hint}</span>
+  </div>
+  {
+    panels.map((p, i) => (
+      <div
+        class="cab__panel"
+        id={`cab-${p.key}`}
+        role="tabpanel"
+        aria-labelledby={`cabtab-${p.key}`}
+        data-cabpanel={p.key}
+        hidden={i !== 0}
+      >
+        <div class="cab__stage" data-reveal>
+          <Picture
+            src={img(p.picture)}
+            formats={['avif', 'webp']}
+            widths={[720, 1200, 1800, 2400]}
+            sizes="(max-width: 1100px) 96vw, 60vw"
+            alt={c.tabs[p.key]}
+            loading="lazy"
+            quality={62}
+          />
+          {
+            p.items.map((it, k) => {
+              const at = place(p.key, it.id);
+              return (
+                at && (
+                  <button
+                    class="spot"
+                    type="button"
+                    style={`left:${(at[0] * 100).toFixed(2)}%;top:${(at[1] * 100).toFixed(2)}%`}
+                    data-spot={it.id}
+                    aria-label={`${k + 1}. ${it.t}`}
+                  >
+                    {k + 1}
+                  </button>
+                )
+              );
+            })
+          }
+        </div>
+        <ol class="cab__list">
+          {
+            p.items.map((it, k) => (
+              <li data-item={it.id} tabindex="0" data-reveal style={`--i:${k}`}>
+                <span class="cab__n">{k + 1}</span>
+                <h3>{it.t}</h3>
+                <p>{it.d}</p>
+              </li>
+            ))
+          }
+        </ol>
+        <div class="cab__details" data-reveal>
+          {
+            p.details.map(([name, caption]) => (
+              <figure>
+                <Picture
+                  src={img(name)}
+                  formats={['avif', 'webp']}
+                  widths={[400, 700, 1100]}
+                  sizes="(max-width: 1100px) 46vw, 20vw"
+                  alt={caption}
+                  loading="lazy"
+                  quality={62}
+                />
+                <figcaption>{caption}</figcaption>
+              </figure>
+            ))
+          }
+        </div>
+      </div>
+    ))
+  }
+</section>

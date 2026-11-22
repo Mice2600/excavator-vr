@@ -1,0 +1,39 @@
+---
+import { t, type Lang } from '../i18n';
+import { filmChapters, url } from '../site';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const f = d.film;
+const stamp = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+---
+
+<section class="sec film" id="film">
+  <SectionHead n="07" kicker={f.kicker} title={f.title} lead={f.lead} wide />
+  <div class="film__frame" data-film data-reveal>
+    <video controls playsinline preload="none" poster={url('video/film.jpg')} aria-label={f.title}>
+      <source src={url('video/film.mp4')} type="video/mp4" />
+    </video>
+    <button class="film__play" type="button" data-play aria-label={f.play}>
+      <svg viewBox="-10 -10 36 36" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"></path></svg>
+      <span>{f.play}</span>
+    </button>
+  </div>
+  <ol class="film__chapters" data-chapters>
+    {
+      f.chapters.map((c, i) => (
+        <li>
+          <button type="button" data-t={filmChapters[i]}>
+            <span class="film__time">{stamp(filmChapters[i])}</span>
+            <span class="film__name">{c}</span>
+          </button>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="note">{f.note}</p>
+</section>

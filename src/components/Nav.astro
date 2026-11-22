@@ -1,0 +1,49 @@
+---
+import { languages, t, type Lang } from '../i18n';
+import { url } from '../site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const links: [string, string][] = [
+  ['fleet', d.nav.fleet],
+  ['ground', d.nav.ground],
+  ['controls', d.nav.controls],
+  ['cab', d.nav.cab],
+  ['film', d.nav.film],
+  ['proof', d.nav.proof],
+  ['downloads', d.nav.downloads],
+];
+---
+
+<a class="skip" href="#main">{d.nav.skip}</a>
+<header class="nav" data-nav>
+  <a class="brand" href={url(`${lang}/`)} aria-label="Excavator VR">
+    <svg class="brand__mark" viewBox="0 0 28 28" aria-hidden="true">
+      <path d="M2 2h24v24H2z" fill="currentColor"></path>
+      <path d="M7 8h14v4l-3 9h-3l-1-4h-2l-1 4H8l-1-9z" fill="#0a0b0d"></path>
+    </svg>
+    <span class="brand__name">Excavator<b>VR</b></span>
+  </a>
+  <nav class="nav__links" aria-label={d.nav.menu}>
+    {links.map(([id, label]) => <a href={`#${id}`}>{label}</a>)}
+  </nav>
+  <div class="langs" role="group" aria-label="Language">
+    {
+      languages.map((l) => (
+        <a
+          href={url(`${l}/`)}
+          hreflang={l}
+          lang={l}
+          data-lang={l}
+          aria-current={l === lang ? 'true' : undefined}
+          title={t(l).langName}
+        >
+          {l.toUpperCase()}
+        </a>
+      ))
+    }
+  </div>
+</header>

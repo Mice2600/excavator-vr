@@ -1,0 +1,42 @@
+---
+import { Picture } from 'astro:assets';
+import { t, type Lang } from '../i18n';
+import { img } from '../images';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const shots = ['detail_bucket', 'detail_tracks', 'detail_cab'];
+---
+
+<section class="sec feel" id="feel">
+  <SectionHead n="01" kicker={d.feel.kicker} title={d.feel.title} lead={d.feel.lead} />
+  <ol class="feel__list">
+    {
+      d.feel.items.map((it, i) => (
+        <li class="feel__i" data-reveal style={`--i:${i}`}>
+          <div class="feel__img">
+            <Picture
+              src={img(shots[i])}
+              formats={['avif', 'webp']}
+              widths={[480, 800, 1200]}
+              sizes="(max-width: 900px) 90vw, 30vw"
+              alt=""
+              loading="lazy"
+              quality={60}
+            />
+          </div>
+          <p class="feel__fig">
+            <b>{it.fig}</b>
+            <span>{it.figl}</span>
+          </p>
+          <h3 class="feel__t">{it.t}</h3>
+          <p class="feel__d">{it.d}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>

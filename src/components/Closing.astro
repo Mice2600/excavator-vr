@@ -1,0 +1,101 @@
+---
+import { Picture } from 'astro:assets';
+import { languages, t, type Lang } from '../i18n';
+import { img } from '../images';
+import { hasContact, site, url } from '../site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const c = site.contact;
+const year = new Date().getFullYear();
+---
+
+<section class="closing" id="contact">
+  <div class="closing__pic" aria-hidden="true">
+    <Picture
+      src={img('ex150_tower')}
+      formats={['avif', 'webp']}
+      widths={[640, 1000, 1500, 2000]}
+      sizes="(max-width: 900px) 110vw, 55vw"
+      alt=""
+      loading="lazy"
+      quality={60}
+    />
+  </div>
+  <div class="closing__text" data-reveal>
+    <h2 class="title title--xl">
+      {hasContact() ? d.contact.title : d.closing.title}
+    </h2>
+    <p class="closing__lead">{hasContact() ? d.contact.lead : d.closing.lead}</p>
+    {
+      hasContact() && (
+        <dl class="contact">
+          {c.email && (
+            <div>
+              <dt>{d.contact.email}</dt>
+              <dd>
+                <a href={`mailto:${c.email}`}>{c.email}</a>
+              </dd>
+            </div>
+          )}
+          {c.phone && (
+            <div>
+              <dt>{d.contact.phone}</dt>
+              <dd>
+                <a href={`tel:${c.phone.replace(/[^+\d]/g, '')}`}>{c.phone}</a>
+              </dd>
+            </div>
+          )}
+          {c.telegram && (
+            <div>
+              <dt>{d.contact.telegram}</dt>
+              <dd>
+                <a href={`https://t.me/${c.telegram}`} rel="noopener">
+                  @{c.telegram}
+                </a>
+              </dd>
+            </div>
+          )}
+        </dl>
+      )
+    }
+    <div class="hero__cta">
+      <a class="btn btn--solid" href="#film">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2.5v11l9-5.5z" fill="currentColor"></path></svg>
+        {d.hero.cta1}
+      </a>
+      <a class="btn" href={url(`downloads/excavator-vr-brochure-${lang}.pdf`)} download>
+        {d.hero.cta2}
+        <svg viewBox="0 0 16 16" aria-hidden="true">
+          <path d="M8 2v9m0 0L4 7m4 4 4-4M3 14h10" fill="none" stroke="currentColor" stroke-width="1.6"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot__top">
+    <p class="brand brand--foot">
+      <span class="brand__name">Excavator<b>VR</b></span>
+    </p>
+    <div class="langs" role="group" aria-label="Language">
+      {
+        languages.map((l) => (
+          <a href={url(`${l}/`)} hreflang={l} lang={l} data-lang={l} aria-current={l === lang ? 'true' : undefined}>
+            {t(l).langName}
+          </a>
+        ))
+      }
+    </div>
+  </div>
+  <p class="foot__small">{d.footer.generic}</p>
+  <p class="foot__small">{d.footer.credits}</p>
+  <p class="foot__small foot__row">
+    <span>© {year} {d.footer.rights}</span>
+    <a href="#top">{d.footer.top} ↑</a>
+  </p>
+</footer>

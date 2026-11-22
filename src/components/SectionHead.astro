@@ -1,0 +1,16 @@
+---
+interface Props {
+  n: string;
+  kicker: string;
+  title: string;
+  lead?: string;
+  wide?: boolean;
+}
+const { n, kicker, title, lead, wide } = Astro.props;
+---
+
+<header class:list={['head', { 'head--wide': wide }]} data-reveal>
+  <p class="kicker"><span class="kicker__n">{n}</span><span class="kicker__t">{kicker}</span></p>
+  <h2 class="title">{title}</h2>
+  {lead && <p class="lead">{lead}</p>}
+</header>

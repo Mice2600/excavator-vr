@@ -1,0 +1,58 @@
+---
+import '@fontsource/fira-sans-extra-condensed/700.css';
+import '@fontsource/fira-sans-extra-condensed/800.css';
+import '@fontsource-variable/onest/wght.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/global.css';
+import { languages, t, type Lang } from '../i18n';
+import { site, url } from '../site';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  path?: string; // the page's path after the language, e.g. '' or 'print/brochure/'
+  print?: boolean;
+}
+
+const { lang, path = '', print = false } = Astro.props;
+const d = t(lang);
+const title = Astro.props.title ?? d.meta.title;
+const description = Astro.props.description ?? d.meta.description;
+const abs = (p: string) => new URL(url(p), Astro.site).href;
+const og = abs('og.jpg');
+---
+
+<!doctype html>
+<html lang={lang} class={print ? 'is-print' : undefined}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0a0b0d" />
+    <meta name="color-scheme" content="dark" />
+    {print && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={abs(`${lang}/${path}`)} />
+    {languages.map((l) => <link rel="alternate" hreflang={l} href={abs(`${l}/${path}`)} />)}
+    <link rel="alternate" hreflang="x-default" href={abs('')} />
+    <link rel="icon" type="image/svg+xml" href={url('favicon.svg')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={abs(`${lang}/${path}`)} />
+    <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={d.locale.replace('-', '_')} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

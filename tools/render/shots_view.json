@@ -1,0 +1,7 @@
+[
+ {"machine": "Excavator", "pose": {"boom": 20, "stick": 92, "bucket": 20},
+  "shots": [
+   {"out": "renders/ex20_cabview.png", "eye": "Seat_Eye", "eye_offset": [0.0, -0.06, 0.05], "look": [-0.45, 3.2, 1.75], "lens": 16, "w": 2560, "h": 1600, "samples": 200,
+    "rig": "cab", "transparent": false, "world": 0.05, "light_box": ["CabInterior"], "light": 1.2}
+  ]}
+]

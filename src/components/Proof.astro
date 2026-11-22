@@ -1,0 +1,55 @@
+---
+import { t, type Lang } from '../i18n';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const p = d.proof;
+---
+
+<section class="sec proof" id="proof">
+  <SectionHead n="09" kicker={p.kicker} title={p.title} />
+  <dl class="proof__nums">
+    {
+      p.items.map(([v, l], i) => (
+        <div data-reveal style={`--i:${i}`}>
+          <dt>{v}</dt>
+          <dd>{l}</dd>
+        </div>
+      ))
+    }
+  </dl>
+  <div class="proof__grid">
+    <div data-reveal>
+      <h3 class="sub">{p.tableTitle}</h3>
+      <table class="spec spec--wide">
+        <tbody>
+          {
+            p.table.map(([k, v]) => (
+              <tr>
+                <th scope="row">{k}</th>
+                <td>{v}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <div data-reveal>
+      <h3 class="sub">{p.statusTitle}</h3>
+      <ol class="road">
+        {
+          p.status.map(([k, v], i) => (
+            <li class={`road__i road__i--${i}`}>
+              <b>{k}</b>
+              <span>{v}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>

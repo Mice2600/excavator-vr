@@ -1,0 +1,78 @@
+---
+import { Picture } from 'astro:assets';
+import { t, type Lang } from '../i18n';
+import { img } from '../images';
+import { url } from '../site';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+const v = d.views;
+---
+
+<section class="sec views" id="views">
+  <SectionHead n="06" kicker={v.kicker} title={v.title} />
+  <div class="views__grid">
+    <figure class="view view--cab" data-reveal style="--i:0">
+      <div class="view__media">
+        <Picture
+          src={img('ex20_cabview')}
+          formats={['avif', 'webp']}
+          widths={[720, 1200, 1800, 2400]}
+          sizes="(max-width: 1000px) 96vw, 60vw"
+          alt={v.cabAlt}
+          loading="lazy"
+          quality={60}
+        />
+      </div>
+      <figcaption>
+        <span class="view__n">A</span>
+        <h3>{v.cab.t}</h3>
+        <p>{v.cab.d}</p>
+      </figcaption>
+    </figure>
+    <figure class="view" data-reveal style="--i:1">
+      <div class="view__media">
+        <video
+          muted
+          loop
+          playsinline
+          preload="none"
+          poster={url('video/clip-spotter.jpg')}
+          data-autoplay
+          aria-label={v.spotter.t}
+        >
+          <source src={url('video/clip-spotter.mp4')} type="video/mp4" />
+        </video>
+      </div>
+      <figcaption>
+        <span class="view__n">B</span>
+        <h3>{v.spotter.t}</h3>
+        <p>{v.spotter.d}</p>
+      </figcaption>
+    </figure>
+    <figure class="view" data-reveal style="--i:2">
+      <div class="view__media">
+        <video
+          muted
+          loop
+          playsinline
+          preload="none"
+          poster={url('video/clip-sky.jpg')}
+          data-autoplay
+          aria-label={v.sky.t}
+        >
+          <source src={url('video/clip-sky.mp4')} type="video/mp4" />
+        </video>
+      </div>
+      <figcaption>
+        <span class="view__n">C</span>
+        <h3>{v.sky.t}</h3>
+        <p>{v.sky.d}</p>
+      </figcaption>
+    </figure>
+  </div>
+</section>

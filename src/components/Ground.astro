@@ -1,0 +1,131 @@
+---
+import { layers, machines } from '../data/machines';
+import { num, t, type Lang } from '../i18n';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const d = t(lang);
+
+const MAX = 56; // metres shown: 50 m of ground and a little bedrock
+// Square-root scale, so 15 cm of turf and 14 m of rock can share one column.
+const y = (depth: number) => Math.sqrt(depth / MAX) * 100;
+const ticks = [0, 1, 3.5, 12, 18, 26, 36, 50];
+const diggers = machines.filter((m) => m.kind !== 'truck');
+
+const data = {
+  max: MAX,
+  locale: d.locale,
+  unit: d.units.m,
+  full: d.ground.full,
+  layers: layers.map((l) => ({
+    id: l.id,
+    top: l.top,
+    bottom: l.bottom,
+    strength: l.strength,
+    speed: l.speed,
+    color: l.color,
+    reach: l.reach,
+    name: d.ground.layers[l.id][0],
+    note: d.ground.layers[l.id][1],
+  })),
+};
+---
+
+<section class="sec ground" id="ground">
+  <SectionHead n="03" kicker={d.ground.kicker} title={d.ground.title} lead={d.ground.lead} wide />
+  <div class="ground__grid">
+    <div class="strata" data-strata data-reveal>
+      <script type="application/json" set:html={JSON.stringify(data)} />
+      <div
+        class="strata__col"
+        data-col
+        role="slider"
+        tabindex="0"
+        aria-label={d.ground.depth}
+        aria-valuemin="0"
+        aria-valuemax={MAX}
+        aria-valuenow="2"
+        aria-orientation="vertical"
+      >
+        {
+          layers.map((l) => (
+            <div
+              class="strata__band"
+              data-band={l.id}
+              style={`--c:${l.color};top:${y(l.top)}%;height:${y(l.bottom) - y(l.top)}%`}
+            >
+              <span>{d.ground.layers[l.id][0]}</span>
+            </div>
+          ))
+        }
+        <ul class="strata__ticks" aria-hidden="true">
+          {
+            ticks.map((m) => (
+              <li style={`top:${y(m)}%`}>
+                {num(d, m, m % 1 ? 1 : 0)} {d.units.m}
+              </li>
+            ))
+          }
+        </ul>
+        <div class="strata__marker" data-marker>
+          <span class="strata__grip" aria-hidden="true"></span>
+        </div>
+      </div>
+      <div class="strata__panel" aria-live="polite">
+        <p class="strata__hint">{d.ground.explore}</p>
+        <p class="strata__depth">
+          <span>{d.ground.depth}</span>
+          <b data-depth>2 {d.units.m}</b>
+        </p>
+        <h3 class="strata__name" data-name>&nbsp;</h3>
+        <p class="strata__range" data-range>&nbsp;</p>
+        <p class="strata__note" data-note>&nbsp;</p>
+        <dl class="strata__data">
+          <div>
+            <dt>{d.ground.strength}</dt>
+            <dd>
+              <span class="meter"><i data-strength></i></span>
+              <b data-strength-v></b>
+            </dd>
+          </div>
+          <div>
+            <dt>{d.ground.speed}</dt>
+            <dd>
+              <span class="meter"><i data-speed></i></span>
+              <b data-speed-v></b>
+            </dd>
+          </div>
+          <div class="strata__reach">
+            <dt>{d.ground.reach}</dt>
+            <dd>
+              {
+                diggers.map((m) => (
+                  <span class="chip" data-chip={m.id} style={`--accent:${m.accent}`}>
+                    {d.fleet.short[m.id]}
+                  </span>
+                ))
+              }
+              <span class="strata__nobody" data-nobody hidden>{d.ground.nobody}</span>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+    <div class="ground__side">
+      <dl class="bigfacts" data-reveal>
+        {
+          d.ground.facts.map(([v, l]) => (
+            <div>
+              <dt>{v}</dt>
+              <dd>{l}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <p class="pull" data-reveal>{d.ground.conserve}</p>
+    </div>
+  </div>
+</section>

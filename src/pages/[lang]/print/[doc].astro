@@ -1,0 +1,515 @@
+---
+// The three documents behind the PDF downloads: brochure (4 pages), fleet data sheet (2), controls card (1).
+// `npm run pdf` prints these pages to public/downloads/.
+import { Image } from 'astro:assets';
+import { layers, machines, type Machine, type Spec } from '../../../data/machines';
+import sideviews from '../../../data/sideviews.json';
+import { languages, num, specText, specValue, t, type Lang } from '../../../i18n';
+import { img } from '../../../images';
+import Base from '../../../layouts/Base.astro';
+import { hasContact, site, url } from '../../../site';
+import '../../../styles/print.css';
+
+export function getStaticPaths() {
+  return languages.flatMap((lang) => ['brochure', 'fleet', 'controls'].map((doc) => ({ params: { lang, doc } })));
+}
+
+const lang = Astro.params.lang as Lang;
+const doc = Astro.params.doc as 'brochure' | 'fleet' | 'controls';
+const d = t(lang);
+const p = d.print;
+const home = new URL(url(''), Astro.site).href.replace(/^https?:\/\//, '').replace(/\/$/, '');
+const titles = { brochure: d.downloads.items.brochure[0], fleet: p.dataTitle, controls: p.controlsTitle };
+const label = (key: string) => d.spec[key as keyof typeof d.spec];
+const side = sideviews as Record<string, { length: number; height: number; w: number; h: number }>;
+const byId = (id: Machine['id']) => machines.find((m) => m.id === id)!;
+const excavators = machines.filter((m) => m.kind === 'excavator');
+const trucks = machines.filter((m) => m.kind === 'truck');
+const bwe = byId('bwe');
+const rowsOf = (list: Machine[]) => {
+  const keys: string[] = [];
+  for (const m of list) for (const s of m.specs) if (!keys.includes(s.key)) keys.push(s.key);
+  return keys.map((key) => ({ key, cells: list.map((m) => m.specs.find((s) => s.key === key) as Spec | undefined) }));
+};
+const contact = [site.contact.email, site.contact.phone, site.contact.telegram && `t.me/${site.contact.telegram}`].filter(Boolean);
+const shown = 56;
+---
+
+<Base lang={lang} title={`${titles[doc]} — ${site.name}`} path={`print/${doc}/`} print>
+  {
+    doc === 'brochure' && (
+      <>
+        <section class="sheet cover">
+          <p class="p-brand">
+            <span>
+              Excavator<b>VR</b>
+            </span>
+            <span>{home}</span>
+          </p>
+          <div class="cover__title">
+            <p class="p-kicker">{p.brochureTitle}</p>
+            <h1 class="p-h1" style="margin-top:4mm">
+              {d.hero.h1a}
+              <em>{d.hero.h1b}</em>
+            </h1>
+            <p class="cover__lead">{d.hero.lead}</p>
+          </div>
+          <div class="cover__pic">
+            <Image src={img('hero_reach')} width={2200} alt="" loading="eager" quality={82} />
+          </div>
+          <dl class="cover__facts">
+            {d.hero.facts.map(([v, l]) => (
+              <div>
+                <dt>{v}</dt>
+                <dd>{l}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+
+        <section class="sheet">
+          <p class="p-brand">
+            <span>
+              Excavator<b>VR</b>
+            </span>
+            <span>02</span>
+          </p>
+          <div class="p-cols" style="margin-top:9mm">
+            <div>
+              <p class="p-kicker">{p.whatTitle}</p>
+              <p style="margin-top:2mm;font-size:11pt;line-height:1.42">{p.what}</p>
+            </div>
+            <div>
+              <p class="p-kicker">{p.whoTitle}</p>
+              <p class="p-text" style="margin-top:2mm">
+                {p.who}
+              </p>
+            </div>
+          </div>
+
+          <h2 class="p-h2" style="margin-top:9mm">
+            {d.feel.title}
+          </h2>
+          <div class="p-cols p-cols--3 p-feel">
+            {d.feel.items.map((it) => (
+              <div>
+                <b>{it.fig}</b>
+                <small>{it.figl}</small>
+                <h3 class="p-h3">{it.t}</h3>
+                <p class="p-text">{it.d}</p>
+              </div>
+            ))}
+          </div>
+
+          <h2 class="p-h2" style="margin-top:9mm">
+            {d.ground.title}
+          </h2>
+          <div class="p-ground">
+            <div class="p-strata">
+              {layers.map((l) => (
+                <i style={`background:${l.color};flex:${Math.sqrt(l.bottom / shown) - Math.sqrt(l.top / shown)}`}>
+                  {Math.sqrt(l.bottom / shown) - Math.sqrt(l.top / shown) > 0.07 ? d.ground.layers[l.id][0] : ''}
+                </i>
+              ))}
+            </div>
+            <div>
+              <p class="p-text">{d.ground.lead}</p>
+              <table class="p-table p-table--num" style="margin-top:3mm">
+                <thead>
+                  <tr>
+                    <th />
+                    <th>{d.ground.depth}</th>
+                    <th>{d.ground.strength}</th>
+                    <th>{d.ground.speed}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {layers.map((l) => (
+                    <tr>
+                      <th>
+                        <span class="p-swatch" style={`background:${l.color}`} />
+                        {d.ground.layers[l.id][0]}
+                      </th>
+                      <td>
+                        {l.strength === null
+                          ? `${num(d, l.top)} ${d.units.m} +`
+                          : `${num(d, l.top, l.top % 1 ? 2 : 0)} – ${num(d, l.bottom, l.bottom % 1 ? 1 : 0)} ${d.units.m}`}
+                      </td>
+                      <td>{l.strength === null ? '∞' : `× ${num(d, l.strength, 1)}`}</td>
+                      <td>{l.speed === null ? '—' : `${Math.round(l.speed * 100)} %`}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p class="p-foot">
+            <span>{d.ground.conserve}</span>
+          </p>
+        </section>
+
+        <section class="sheet">
+          <p class="p-brand">
+            <span>
+              Excavator<b>VR</b>
+            </span>
+            <span>03</span>
+          </p>
+          <p class="p-kicker" style="margin-top:9mm">
+            {p.fleetTitle}
+          </p>
+          <h2 class="p-h2">{d.fleet.title}</h2>
+          <p class="p-text" style="margin-top:3mm;max-width:150mm">
+            {d.fleet.lead}
+          </p>
+          <div class="p-fleet">
+            {machines.map((m) => (
+              <article class:list={['p-machine', { 'p-machine--wide': m.id === 'bwe' }]} style={`--accent:${m.accent}`}>
+                <div class="p-machine__pic">
+                  <Image src={img(`${m.id}_34`)} width={900} alt="" loading="eager" quality={80} />
+                </div>
+                <div>
+                  <h3 class="p-h3">{d.fleet.names[m.id][0]}</h3>
+                  <p>{d.fleet.names[m.id][1]}</p>
+                  <dl>
+                    {m.headline.map((s) => {
+                      const v = specValue(d, s);
+                      return (
+                        <div>
+                          <dt>{label(s.key)}</dt>
+                          <dd>
+                            {v.value}
+                            <small>{v.unit}</small>
+                          </dd>
+                        </div>
+                      );
+                    })}
+                  </dl>
+                </div>
+              </article>
+            ))}
+          </div>
+          <p class="p-foot">
+            <span>{d.footer.generic}</span>
+          </p>
+        </section>
+
+        <section class="sheet">
+          <p class="p-brand">
+            <span>
+              Excavator<b>VR</b>
+            </span>
+            <span>04</span>
+          </p>
+          <div class="p-cols" style="margin-top:8mm;grid-template-columns:1.15fr 1fr">
+            <div>
+              <p class="p-kicker">{d.cab.kicker}</p>
+              <h2 class="p-h2">{d.cab.title}</h2>
+              <p class="p-text" style="margin-top:3mm">
+                {d.cab.lead}
+              </p>
+            </div>
+            <div class="p-pic" style="height:62mm">
+              <Image src={img('cab_ex20')} width={1200} alt="" loading="eager" quality={80} />
+            </div>
+          </div>
+          <div class="p-cols" style="margin-top:7mm">
+            <div>
+              <p class="p-kicker">{d.controls.kicker}</p>
+              <h3 class="p-h3" style="margin-top:2mm">
+                {d.controls.smart.t}
+              </h3>
+              <p class="p-text" style="font-size:8.8pt;margin-top:1mm">
+                {d.controls.smart.d}
+              </p>
+              <h3 class="p-h3" style="margin-top:4mm">
+                {d.controls.classic.t}
+              </h3>
+              <p class="p-text" style="font-size:8.8pt;margin-top:1mm">
+                {d.controls.classic.d}
+              </p>
+            </div>
+            <div>
+              <p class="p-kicker">{d.views.kicker}</p>
+              {[d.views.cab, d.views.spotter, d.views.sky].map((v) => (
+                <>
+                  <h3 class="p-h3" style="margin-top:2mm">
+                    {v.t}
+                  </h3>
+                  <p class="p-text" style="font-size:8.4pt;margin:0.6mm 0 2.4mm">
+                    {v.d}
+                  </p>
+                </>
+              ))}
+            </div>
+          </div>
+          <div class="p-cols" style="margin-top:6mm;grid-template-columns:1.3fr 1fr">
+            <div>
+              <p class="p-kicker">{d.proof.tableTitle}</p>
+              <table class="p-table p-table--text" style="margin-top:1.5mm">
+                <tbody>
+                  {d.proof.table.map(([k, v]) => (
+                    <tr>
+                      <th>{k}</th>
+                      <td>{v}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <p class="p-kicker">{d.together.kicker}</p>
+              <p class="p-text" style="font-size:8.6pt;margin:1.5mm 0 2mm">
+                {d.together.lead}
+              </p>
+              <p class="p-kicker" style="margin-top:4mm">
+                {d.proof.statusTitle}
+              </p>
+              <ul class="p-status" style="margin-top:1mm">
+                {d.proof.status.map(([k, v]) => (
+                  <li>
+                    <b>{k}</b>
+                    {v}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div class="p-contact">
+            <strong>{hasContact() ? d.contact.title : `${d.closing.title} ${d.closing.lead}`}</strong>
+            <span>
+              {contact.map((c) => (
+                <>
+                  {c}
+                  <br />
+                </>
+              ))}
+              {home}
+            </span>
+          </div>
+          <p class="p-foot">
+            <span>{d.footer.credits}</span>
+            <span>© {new Date().getFullYear()} Excavator VR</span>
+          </p>
+        </section>
+      </>
+    )
+  }
+
+  {
+    doc === 'fleet' && (
+      <>
+        <section class="sheet sheet--light">
+          <p class="p-brand">
+            <span>
+              Excavator<b>VR</b>
+            </span>
+            <span>{home}</span>
+          </p>
+          <p class="p-kicker" style="margin-top:8mm">
+            {p.dataTitle} · 1 / 2
+          </p>
+          <h2 class="p-h2">{p.excavators}</h2>
+          <div class="p-sides" style={`grid-template-columns:${excavators.map((m) => `${side[m.id].length}fr`).join(' ')}`}>
+            {excavators.map((m) => (
+              <figure>
+                <Image src={img(`${m.id}_side`)} width={900} alt="" loading="eager" quality={82} />
+                <figcaption>{d.fleet.names[m.id][0]}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <table class="p-table p-table--num">
+            <thead>
+              <tr>
+                <th />
+                {excavators.map((m) => (
+                  <th>{d.fleet.short[m.id]}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rowsOf(excavators).map((r) => (
+                <tr>
+                  <th>{label(r.key)}</th>
+                  {r.cells.map((c) => (
+                    <td>{c ? specText(d, c) : '—'}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <h2 class="p-h2" style="margin-top:9mm">
+            {d.ground.kicker}
+          </h2>
+          <table class="p-table p-table--num" style="margin-top:3mm">
+            <thead>
+              <tr>
+                <th />
+                <th>{d.ground.depth}</th>
+                <th>{d.ground.strength}</th>
+                <th>{d.ground.speed}</th>
+                <th>{d.ground.reach}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {layers.map((l) => (
+                <tr>
+                  <th>
+                    <span class="p-swatch" style={`background:${l.color}`} />
+                    {d.ground.layers[l.id][0]}
+                  </th>
+                  <td>
+                    {l.strength === null
+                      ? `${num(d, l.top)} ${d.units.m} +`
+                      : `${num(d, l.top, l.top % 1 ? 2 : 0)} – ${num(d, l.bottom, l.bottom % 1 ? 1 : 0)} ${d.units.m}`}
+                  </td>
+                  <td>{l.strength === null ? '∞' : `× ${num(d, l.strength, 1)}`}</td>
+                  <td>{l.speed === null ? '—' : `${Math.round(l.speed * 100)} %`}</td>
+                  <td>{l.reach.length ? l.reach.map((id) => d.fleet.short[id]).join(' · ') : '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p class="p-note">{p.dataNote}</p>
+          <p class="p-foot">
+            <span>{d.footer.generic}</span>
+          </p>
+        </section>
+
+        <section class="sheet sheet--light">
+          <p class="p-brand">
+            <span>
+              Excavator<b>VR</b>
+            </span>
+            <span>{home}</span>
+          </p>
+          <p class="p-kicker" style="margin-top:8mm">
+            {p.dataTitle} · 2 / 2
+          </p>
+          <h2 class="p-h2">{p.trucks}</h2>
+          <div class="p-sides" style={`grid-template-columns:${trucks.map((m) => `${side[m.id].length}fr`).join(' ')} 12fr`}>
+            {trucks.map((m) => (
+              <figure>
+                <Image src={img(`${m.id}_side`)} width={900} alt="" loading="eager" quality={82} />
+                <figcaption>{d.fleet.names[m.id][0]}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <table class="p-table p-table--num">
+            <thead>
+              <tr>
+                <th />
+                {trucks.map((m) => (
+                  <th>{d.fleet.names[m.id][0]}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rowsOf(trucks).map((r) => (
+                <tr>
+                  <th>{label(r.key)}</th>
+                  {r.cells.map((c) => (
+                    <td>{c ? specText(d, c) : '—'}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <h2 class="p-h2" style="margin-top:9mm">
+            {p.bwe}
+          </h2>
+          <div class="p-cols" style="margin-top:4mm;grid-template-columns:1.25fr 1fr;align-items:center">
+            <Image src={img('bwe_side')} width={1400} alt="" loading="eager" quality={82} />
+            <table class="p-table p-table--num">
+              <tbody>
+                {bwe.specs.map((s) => (
+                  <tr>
+                    <th>{label(s.key)}</th>
+                    <td>{specText(d, s)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p class="p-note">{d.fleet.lead}</p>
+          <p class="p-foot">
+            <span>{d.footer.generic}</span>
+            <span>© {new Date().getFullYear()} Excavator VR</span>
+          </p>
+        </section>
+      </>
+    )
+  }
+
+  {
+    doc === 'controls' && (
+      <section class="sheet sheet--light">
+        <p class="p-brand">
+          <span>
+            Excavator<b>VR</b>
+          </span>
+          <span>{home}</span>
+        </p>
+        <p class="p-kicker" style="margin-top:8mm">
+          {d.controls.kicker}
+        </p>
+        <h2 class="p-h2">{p.controlsTitle}</h2>
+
+        <div class="p-pads">
+          {[
+            { t: d.controls.left, rows: [['↑', d.controls.stickOut], ['↓', d.controls.stickIn], ['←', d.controls.swingL], ['→', d.controls.swingR]] },
+            { t: d.controls.right, rows: [['↑', d.controls.boomDown], ['↓', d.controls.boomUp], ['←', d.controls.curl], ['→', d.controls.dump]] },
+          ].map((pad) => (
+            <div class="p-padbox">
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <circle cx="50" cy="50" r="46" fill="none" stroke="#15171a" stroke-width="1.5" />
+                <circle cx="50" cy="50" r="15" fill="#f2b705" stroke="#15171a" stroke-width="1.5" />
+                <path d="M50 8v22M50 70v22M8 50h22M70 50h22" stroke="#15171a" stroke-width="1.2" />
+                <path d="M50 4l-5 8h10zM50 96l-5-8h10zM4 50l8-5v10zM96 50l-8-5v10z" fill="#15171a" />
+              </svg>
+              <div>
+                <h4>
+                  {pad.t} · {p.excavatorClassic}
+                </h4>
+                <ul>
+                  {pad.rows.map(([arrow, text]) => (
+                    <li>
+                      <b>{arrow}</b>
+                      {text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {[
+          [p.excavatorSmart, p.rows.smart],
+          [p.excavatorClassic, p.rows.classic],
+          [p.truck, p.rows.truck],
+          [p.both, p.rows.both],
+        ].map(([title, rows]) => (
+          <div class="p-block">
+            <h3 class="p-h3">{title}</h3>
+            <table class="p-table p-table--text">
+              <tbody>
+                {(rows as string[][]).map(([input, action]) => (
+                  <tr>
+                    <th style="width:76mm;font-family:var(--text);font-size:8.6pt;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600;padding-top:1.55mm">
+                      {input}
+                    </th>
+                    <td>{action}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
+        <p class="p-foot">
+          <span>{d.controls.assists.join(' ')}</span>
+        </p>
+      </section>
+    )
+  }
+</Base>
