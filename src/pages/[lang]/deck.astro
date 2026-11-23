@@ -59,7 +59,7 @@ const crewColors = ['#c8431c', '#2f62c4', '#2e8a4a', '#8d9096'];
         <div class="qr__code" set:html={qr} />
         <p>
           <span>{p.site}</span>
-          <b>{home}</b>
+          <a href={full}><b>{home}</b></a>
         </p>
       </div>
     </div>
@@ -449,7 +449,7 @@ const crewColors = ['#c8431c', '#2f62c4', '#2e8a4a', '#8d9096'];
           <div class="qr__code" set:html={qr} />
           <p>
             <span>{k.scan}</span>
-            <b>{home}</b>
+            <a href={full}><b>{home}</b></a>
           </p>
         </div>
         <p class="body">{k.link}</p>

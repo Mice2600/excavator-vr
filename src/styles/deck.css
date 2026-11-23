@@ -258,6 +258,9 @@ html.is-print body {
   text-transform: uppercase;
   color: var(--ink-3);
 }
+.qr a {
+  text-decoration: none;
+}
 .qr b {
   font-family: var(--mono);
   font-weight: 500;
