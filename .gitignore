@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# the presentation as pictures (made by npm run pdf), handed over by hand
+exports/

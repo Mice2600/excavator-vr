@@ -34,7 +34,37 @@ const uz: typeof en = {
       ['72 Gs', 'fizika'],
       ['4', 'mashinist bitta maydonda'],
     ],
-    alt: 'Excavator VR ning 20 tonnali ekskavatori: strela choʻzilgan, kovsh yerda',
+    alt: 'Excavator VR ning 20 tonnali ekskavatori: strela choʻzilgan, kovsh yerda; yonida kaskadagi ishchi turibdi',
+  },
+  vr: {
+    kicker: 'VR',
+    title: 'Shlemni kiying. Siz kabinadasiz.',
+    lead: 'Poligon ham, kabina maketi ham, yonilgʻi ham kerak emas. Oʻquv joyi — stul, shlem va ikkita kontroller, kursantning koʻz oldida esa haqiqiy oʻlchamdagi 20 tonnali mashina.',
+    site: [
+      'Maydonda',
+      'Yigirma tonna poʻlat, yonilgʻi — va yangi boshlovchining xatosiga oʻrin yoʻq.',
+    ],
+    seat: [
+      'Mashgʻulotda',
+      'Stul, shlem, ikkita kontroller. Richaglar bilan oʻsha ish.',
+    ],
+    points: [
+      [
+        'Quest 3',
+        'Mustaqil ishlaydigan Meta Quest 3 shlemi uchun yaratilgan: sinfda kabel ham, kompyuter ham kerak emas. Kompyuterdan Quest Link orqali ham, namoyish uchun oddiy ekranda ham ishlaydi.',
+      ],
+      [
+        '72 kadr/s',
+        'Shlemning oʻzida, dastlabki yigʻmaning qazish boʻyicha yuklama testida oʻlchangan. Fizika ham tasvir bilan bir xil — 72 Gs chastotada hisoblanadi.',
+      ],
+      [
+        '1 : 1',
+        'Koʻzingiz mashinist koʻzi turgan joyda. Atrofingizda haqiqiy oʻlchamdagi kabina: monitor, richaglar va pedallar mashinadagi oʻz joyida.',
+      ],
+    ],
+    altSite: 'Kaska va signal jiletidagi ishchi, qoʻlida VR-shlem',
+    altSeat: 'Stulda oʻtirgan kursant VR-shlem kiygan va ikki kontrollerni ekskavator richaglaridek ushlab turibdi',
+    altHeadset: 'VR-shlem yaqindan',
   },
   feel: {
     kicker: 'His',
@@ -258,6 +288,8 @@ const uz: typeof en = {
     ],
     status: 'Sinovda',
     note: 'Tarmoq rejimi yigʻilgan va bitta kompyuterdagi ikki nusxa oʻrtasida tekshirilgan. Keyingi bosqich — shlemlar oʻrtasidagi sinovlar.',
+    crew: 'Toʻrt shlem, bitta maydon. Har bir mashinistning oʻz ismi va rangi bor: osmondan koʻrinishda u boshqarayotgan mashina shular bilan belgilanadi.',
+    crewAlt: 'Turli rangdagi kombinezon kiygan toʻrt kursant VR-shlemda yonma-yon oʻtiribdi',
   },
   proof: {
     kicker: 'Maʼlumotlar',
@@ -291,6 +323,10 @@ const uz: typeof en = {
     kicker: 'Materiallar',
     title: 'Oʻzingiz bilan oling.',
     items: {
+      presentation: [
+        'Taqdimot',
+        'Butun loyiha oʻn bir slaydda: VR, tarmoq rejimi, mashinalar, holat.',
+      ],
       brochure: ['Buklet', 'Trenajyor toʻrt sahifada.'],
       fleet: ['Mashinalar tavsifi', 'Barcha mashinalar, barcha raqamlar.'],
       controls: ['Boshqaruv kartochkasi', 'Ikkala boshqaruv rejimi bitta sahifada — oʻquv xonasi devori uchun.'],
@@ -317,6 +353,47 @@ const uz: typeof en = {
     credits: 'Sirt teksturalari — Poly Haven (CC0). Unity 6 da yaratilgan.',
     rights: 'Excavator VR',
     top: 'Yuqoriga',
+  },
+  deck: {
+    tagline: 'Ekskavator mashinistlari uchun virtual reallik trenajyori',
+    problemK: 'Muammo',
+    problemT: 'Birinchi soatlar — eng qimmati.',
+    problem: [
+      'Yangi boshlovchi haqiqiy mashinada oʻrganadi: yonilgʻi, yeyilish va yonida turgan instruktor.',
+      'Xatolar qimmatga tushadi: agʻdarilgan mashina, uzilgan quvur, burilish zonasidagi odam.',
+      'Bitta mashina bir vaqtda bitta kursantni oʻrgatadi — shunda ham maydon va ob-havo imkon bergandagina.',
+    ],
+    solutionK: 'Gʻoya',
+    solutionT: 'Har bir kursantga oʻz mashinasini berish — VR da.',
+    vrK: 'Virtual reallik',
+    seesK: 'Kursant nimani koʻradi',
+    sees: 'Haqiqiy oʻlchamdagi kabinani, old oyna ortidagi strelani, ishlab turgan monitorni.',
+    doesK: 'Kursant nima qiladi',
+    does: 'Stulda oʻtirib, ikki kontroller bilan ishlaydi — qoʻl harakatlari richaglardagi bilan bir xil.',
+    mpK: 'Tarmoq rejimi',
+    mpHowK: 'Qanday ulanadi',
+    mpHow: [
+      'Bitta shlem maydonni ochadi.',
+      'Qolganlari uni oʻsha Wi-Fi tarmogʻida topib, ulanadi.',
+      'Internetsiz, serversiz, akkauntlarsiz.',
+    ],
+    rolesK: 'Kim nima qiladi',
+    roles: [
+      ['1-mashinist', '20 t ekskavator'],
+      ['2-mashinist', 'ikkinchi ekskavator'],
+      ['3-mashinist', 'samosval'],
+      ['Instruktor', 'osmondan koʻrinish, keyin istalgan boʻsh kabina'],
+    ],
+    mpMore: [
+      'Har bir mashinistning oʻz ismi va rangi bor; osmondan koʻrinishda uning mashinasi shular bilan belgilanadi.',
+      'Band oʻrinni ikkinchi marta egallab boʻlmaydi. Maydondan chiqsangiz — oʻrin yana boʻsh.',
+    ],
+    whyK: 'Nega birgalikda',
+    whyT: 'Samosvalni yuklash — jamoa ishi.',
+    why: 'Haqiqiy maydonda hech kim yolgʻiz qazimaydi. Ekskavator mashinisti kovshni boshqa odam qoʻygan kuzov ustiga olib borishi, samosval haydovchisi esa kutishi, joʻnashi va qaytib kelishi kerak. Excavator VR da ekipaj buni birgalikda mashq qiladi.',
+    closeK: 'Harakatda koʻring',
+    link: 'Saytda — ikki daqiqalik film, 3D mashinalar va brauzerning oʻzida boshqarsa boʻladigan qazish demosi.',
+    scan: 'Kamerani qarating',
   },
   print: {
     brochureTitle: 'Ekskavator mashinistlari uchun VR-trenajyor',

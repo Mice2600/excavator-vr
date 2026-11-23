@@ -1,0 +1,73 @@
+---
+// "Put the headset on": what the training place is (a chair, a headset, two controllers) beside what it replaces.
+import { Picture } from 'astro:assets';
+import { t, type Lang } from '../i18n';
+import { img } from '../images';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  lang: Lang;
+  n: string;
+}
+const { lang, n } = Astro.props;
+const v = t(lang).vr;
+---
+
+<section class="sec vr" id="vr">
+  <SectionHead n={n} kicker={v.kicker} title={v.title} lead={v.lead} wide />
+  <div class="vr__stage">
+    <figure class="vr__site" data-reveal>
+      <Picture
+        src={img('worker')}
+        formats={['avif', 'webp']}
+        widths={[360, 560, 800, 1200]}
+        sizes="(max-width: 900px) 60vw, 24vw"
+        alt={v.altSite}
+        loading="lazy"
+        quality={62}
+      />
+      <figcaption>
+        <b>{v.site[0]}</b>
+        {v.site[1]}
+      </figcaption>
+    </figure>
+    <figure class="vr__seat" data-reveal style="--i:1">
+      <Picture
+        src={img('vr_trainee')}
+        formats={['avif', 'webp']}
+        widths={[360, 560, 800, 1200]}
+        sizes="(max-width: 900px) 70vw, 26vw"
+        alt={v.altSeat}
+        loading="lazy"
+        quality={64}
+      />
+      <figcaption>
+        <b>{v.seat[0]}</b>
+        {v.seat[1]}
+      </figcaption>
+    </figure>
+  </div>
+  <div class="vr__row">
+    <ol class="vr__points">
+      {
+        v.points.map(([fig, text], i) => (
+          <li data-reveal style={`--i:${i}`}>
+            <b>{fig}</b>
+            <p>{text}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <div class="vr__headset" data-reveal>
+      <Picture
+        src={img('vr_headset')}
+        formats={['avif', 'webp']}
+        widths={[360, 600, 900, 1300]}
+        sizes="(max-width: 900px) 80vw, 24vw"
+        alt={v.altHeadset}
+        loading="lazy"
+        quality={62}
+      />
+    </div>
+  </div>
+</section>

@@ -12,6 +12,7 @@ const w = d.downloads;
 
 // File names follow excavator-vr-<doc>-<lang>.pdf; they are made by `npm run pdf`.
 const docs = [
+  { id: 'presentation', pages: 11 },
   { id: 'brochure', pages: 4 },
   { id: 'fleet', pages: 2 },
   { id: 'controls', pages: 1 },
@@ -20,7 +21,7 @@ const file = (id: string, l: string) => url(`downloads/excavator-vr-${id}-${l}.p
 ---
 
 <section class="sec downloads" id="downloads">
-  <SectionHead n="10" kicker={w.kicker} title={w.title} />
+  <SectionHead n="11" kicker={w.kicker} title={w.title} />
   <ul class="docs">
     {
       docs.map((doc, i) => (

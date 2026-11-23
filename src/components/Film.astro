@@ -13,7 +13,7 @@ const stamp = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2,
 ---
 
 <section class="sec film" id="film">
-  <SectionHead n="07" kicker={f.kicker} title={f.title} lead={f.lead} wide />
+  <SectionHead n="08" kicker={f.kicker} title={f.title} lead={f.lead} wide />
   <div class="film__frame" data-film data-reveal>
     <video controls playsinline preload="none" poster={url('video/film.jpg')} aria-label={f.title}>
       <source src={url('video/film.mp4')} type="video/mp4" />

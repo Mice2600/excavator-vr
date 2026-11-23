@@ -12,6 +12,7 @@ import Nav from '../../components/Nav.astro';
 import Proof from '../../components/Proof.astro';
 import Together from '../../components/Together.astro';
 import Views from '../../components/Views.astro';
+import Vr from '../../components/Vr.astro';
 import { languages, type Lang } from '../../i18n';
 import Base from '../../layouts/Base.astro';
 
@@ -27,11 +28,12 @@ const lang = Astro.params.lang as Lang;
   <Nav lang={lang} />
   <main id="main">
     <Hero lang={lang} />
+    <Vr lang={lang} n="01" />
     <Feel lang={lang} />
     <Fleet lang={lang} />
     <Ground lang={lang} />
     <Controls lang={lang} />
-    <Cab lang={lang} n="05" />
+    <Cab lang={lang} n="06" />
     <Views lang={lang} />
     <Film lang={lang} />
     <Together lang={lang} />

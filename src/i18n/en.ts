@@ -31,7 +31,34 @@ export default {
       ['72 Hz', 'physics'],
       ['4', 'operators on one site'],
     ],
-    alt: 'The 20-tonne excavator of Excavator VR, arm stretched out, bucket on the ground',
+    alt: 'The 20-tonne excavator of Excavator VR, arm stretched out, bucket on the ground; a worker in a hard hat stands beside it',
+  },
+  vr: {
+    kicker: 'VR',
+    title: 'Put the headset on. You are in the cab.',
+    lead: 'No hall, no cab mock-up, no fuel. The training place is a chair, a headset and two controllers, and what the trainee sees is a 20-tonne machine at full size.',
+    site: [
+      'On site',
+      'Twenty tonnes of steel, fuel, and no room for a beginner’s mistake.',
+    ],
+    seat: ['In training', 'A chair, a headset, two controllers. The same lever work.'],
+    points: [
+      [
+        'Quest 3',
+        'Built for the standalone Meta Quest 3: no cable and no PC in the classroom. It also runs from a PC over Quest Link, and on a desktop screen for demonstrations.',
+      ],
+      [
+        '72 fps',
+        'Measured on the headset itself, in a digging stress test of an early build. Physics steps at the same 72 Hz as the display.',
+      ],
+      [
+        '1 : 1',
+        'Your eyes sit at the operator’s eye point. The cab is full size around you, with its monitor, levers and pedals where they are in the machine.',
+      ],
+    ],
+    altSite: 'A worker in a hard hat and a hi-vis vest, a VR headset in his hand',
+    altSeat: 'A trainee on a chair wears a VR headset and holds two controllers like the levers of an excavator',
+    altHeadset: 'The VR headset, close up',
   },
   feel: {
     kicker: 'Feel',
@@ -255,6 +282,8 @@ export default {
     ],
     status: 'In testing',
     note: 'Multiplayer is built and verified between two copies on one PC. Headset-to-headset trials come next.',
+    crew: 'Four headsets, one site. Each operator has a name and a colour; in Sky View they mark the machine that person drives.',
+    crewAlt: 'Four trainees in overalls of different colours sit side by side, each in a VR headset',
   },
   proof: {
     kicker: 'Data',
@@ -288,6 +317,10 @@ export default {
     kicker: 'Downloads',
     title: 'Take it with you.',
     items: {
+      presentation: [
+        'Presentation',
+        'The whole project in eleven slides: VR, multiplayer, machines, status.',
+      ],
       brochure: ['Brochure', 'The simulator in four pages.'],
       fleet: ['Fleet data sheet', 'Every machine, every number.'],
       controls: ['Controls card', 'Both control modes on one page, for the training-room wall.'],
@@ -314,6 +347,47 @@ export default {
     credits: 'Surface textures from Poly Haven (CC0). Built with Unity 6.',
     rights: 'Excavator VR',
     top: 'Back to top',
+  },
+  deck: {
+    tagline: 'A virtual-reality training simulator for excavator operators',
+    problemK: 'The problem',
+    problemT: 'The first hours are the expensive ones.',
+    problem: [
+      'A beginner learns on a real machine: fuel, wear, and an instructor standing beside it.',
+      'Mistakes cost: a tipped machine, a torn pipe, a person inside the swing radius.',
+      'One machine teaches one trainee at a time, and only when the site and the weather allow.',
+    ],
+    solutionK: 'The idea',
+    solutionT: 'Give every trainee a machine of their own, in VR.',
+    vrK: 'Virtual reality',
+    seesK: 'What the trainee sees',
+    sees: 'The cab at full size, the boom through the windscreen, the live monitor.',
+    doesK: 'What the trainee does',
+    does: 'Sits on a chair and works two controllers with the same hand movements as the levers.',
+    mpK: 'Multiplayer',
+    mpHowK: 'How it connects',
+    mpHow: [
+      'One headset hosts the site.',
+      'The others find it on the same Wi-Fi and join.',
+      'No internet, no server, no accounts.',
+    ],
+    rolesK: 'Who does what',
+    roles: [
+      ['Operator 1', '20 t excavator'],
+      ['Operator 2', 'second excavator'],
+      ['Operator 3', 'dump truck'],
+      ['Instructor', 'Sky View, then any free cab'],
+    ],
+    mpMore: [
+      'Each operator has a name and a colour; in Sky View they mark that person’s machine.',
+      'A seat that is taken cannot be taken twice. Leave the site and the seat is free again.',
+    ],
+    whyK: 'Why together',
+    whyT: 'Loading a truck is team work.',
+    why: 'On a real site nobody digs alone. The excavator operator has to place the bucket over a body that someone else parked; the truck driver has to wait, pull away and come back. In Excavator VR a crew practises that together.',
+    closeK: 'See it move',
+    link: 'On the website: the two-minute film, the machines in 3D and a dig demo you can drive in the browser.',
+    scan: 'Point a camera here',
   },
   print: {
     brochureTitle: 'VR training simulator for excavator operators',

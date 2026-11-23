@@ -15,7 +15,7 @@ const g = d.together;
 <section class="sec together" id="together">
   <div class="together__grid">
     <div class="together__text">
-      <SectionHead n="08" kicker={g.kicker} title={g.title} lead={g.lead} />
+      <SectionHead n="09" kicker={g.kicker} title={g.title} lead={g.lead} />
       <ul class="ticks" data-reveal>
         {g.items.map((it) => <li>{it}</li>)}
       </ul>
@@ -49,4 +49,16 @@ const g = d.together;
       </div>
     </div>
   </div>
+  <figure class="together__crew" data-reveal>
+    <Picture
+      src={img('vr_crew')}
+      formats={['avif', 'webp']}
+      widths={[720, 1200, 1800, 2600, 3200]}
+      sizes="(max-width: 1700px) 94vw, 1500px"
+      alt={g.crewAlt}
+      loading="lazy"
+      quality={62}
+    />
+    <figcaption>{g.crew}</figcaption>
+  </figure>
 </section>

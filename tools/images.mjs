@@ -33,6 +33,15 @@ const CUTOUTS = {
   ex20_red: 2000,
   ex150_tower: 2100,
   bwe_wheel: 1600,
+  // the people: the trainee in the headset, the worker, the crew of four
+  vr_trainee: 2000,
+  vr_trainee_side: 2000,
+  vr_headset: 1500,
+  vr_crew: 3200,
+  vr_pair: 2200,
+  worker: 2000,
+  worker_b: 2000,
+  worker_scale: 3000,
   ...Object.fromEntries(IDS.flatMap((id) => [[`${id}_34`, 2200], [`${id}_low`, 2000], [`${id}_side`, 2400]])),
 };
 // Full frames (the cab interiors).
@@ -62,7 +71,7 @@ for (const [name, size] of Object.entries(CUTOUTS)) {
   }
   // Trim to the machine and its shadow, then lift the colour a little: the renders are graded for a dark page.
   const trimmed = await sharp(src).trim({ threshold: 6 }).toBuffer({ resolveWithObject: true });
-  const isSide = name.endsWith('_side');
+  const isSide = name.endsWith('_side') && IDS.includes(name.replace('_side', '')); // the machines' true-scale side views
   let img = sharp(trimmed.data).resize({ width: size, height: size, fit: 'inside', withoutEnlargement: true });
   if (!isSide) img = img.modulate({ saturation: 1.1, brightness: 1.03 });
   const info = await img.webp({ quality: 90, alphaQuality: 100, effort: 5 }).toFile(path.join(OUT, `${name}.webp`));

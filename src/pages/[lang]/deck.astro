@@ -1,0 +1,461 @@
+---
+// The presentation: the whole project in eleven 16:9 slides, most of them about VR and multiplayer.
+// `npm run pdf` prints it to public/downloads/excavator-vr-presentation-<lang>.pdf and saves each slide as a picture.
+import { Image } from 'astro:assets';
+import QRCode from 'qrcode';
+import { layers, machines } from '../../data/machines';
+import { languages, specValue, t, type Lang } from '../../i18n';
+import { img } from '../../images';
+import Base from '../../layouts/Base.astro';
+import { hasContact, site, url } from '../../site';
+import '../../styles/deck.css';
+
+export function getStaticPaths() {
+  return languages.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const d = t(lang);
+const k = d.deck;
+const p = d.print;
+const full = new URL(url(''), Astro.site).href;
+const home = full.replace(/^https?:\/\//, '').replace(/\/$/, '');
+const qr = await QRCode.toString(full, { type: 'svg', margin: 0, errorCorrectionLevel: 'M', color: { dark: '#0a0b0d', light: '#ffffff' } });
+const label = (key: string) => d.spec[key as keyof typeof d.spec];
+const contact = [site.contact.email, site.contact.phone, site.contact.telegram && `t.me/${site.contact.telegram}`].filter(Boolean);
+const shown = 56;
+const total = 11;
+const crewColors = ['#c8431c', '#2f62c4', '#2e8a4a', '#8d9096'];
+---
+
+<Base lang={lang} title={`${d.downloads.items.presentation[0]} — ${site.name}`} path="deck/" print>
+  <!-- 1. cover -->
+  <section class="slide cover">
+    <div class="cover__pic">
+      <Image src={img('worker_scale')} width={2600} alt="" loading="eager" quality={84} />
+    </div>
+    <p class="dk-brand">
+      <span>Excavator<b>VR</b></span>
+    </p>
+    <div class="cover__title">
+      <p class="kick">{k.tagline}</p>
+      <h1>
+        {d.hero.h1a}
+        <em>{d.hero.h1b}</em>
+      </h1>
+    </div>
+    <div class="cover__foot">
+      <dl class="dk-facts">
+        {
+          d.hero.facts.map(([v, l]) => (
+            <div>
+              <dt>{v}</dt>
+              <dd>{l}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <div class="qr">
+        <div class="qr__code" set:html={qr} />
+        <p>
+          <span>{p.site}</span>
+          <b>{home}</b>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. problem and idea -->
+  <section class="slide">
+    <p class="dk-brand">
+      <span>Excavator<b>VR</b></span>
+      <span>02 / {total}</span>
+    </p>
+    <div class="idea">
+      <div class="idea__col">
+        <p class="kick">{k.problemK}</p>
+        <h2>{k.problemT}</h2>
+        <ol class="nums">
+          {k.problem.map((it) => <li>{it}</li>)}
+        </ol>
+      </div>
+      <div class="idea__col idea__col--lit">
+        <p class="kick">{k.solutionK}</p>
+        <h2>{k.solutionT}</h2>
+        <p class="body">{p.what}</p>
+        <p class="kick" style="margin-top:6mm">{p.whoTitle}</p>
+        <p class="body body--dim">{p.who}</p>
+      </div>
+      <div class="idea__pic">
+        <Image src={img('vr_trainee')} width={1100} alt="" loading="eager" quality={84} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. VR: in the seat -->
+  <section class="slide">
+    <p class="dk-brand">
+      <span>Excavator<b>VR</b></span>
+      <span>03 / {total}</span>
+    </p>
+    <p class="kick kick--top">{k.vrK}</p>
+    <h2 class="h-wide">{d.vr.title}</h2>
+    <div class="seat">
+      <figure class="seat__sees">
+        <Image src={img('ex20_cabview')} width={1700} alt="" loading="eager" quality={84} />
+        <figcaption>
+          <b>{k.seesK}</b>
+          {k.sees}
+        </figcaption>
+      </figure>
+      <figure class="seat__does">
+        <Image src={img('vr_trainee_side')} width={1000} alt="" loading="eager" quality={84} />
+        <figcaption>
+          <b>{k.doesK}</b>
+          {k.does}
+        </figcaption>
+      </figure>
+      <ol class="figs figs--col">
+        {
+          d.vr.points.map(([fig, text]) => (
+            <li>
+              <b>{fig}</b>
+              <p>{text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- 4. VR: the controls -->
+  <section class="slide">
+    <p class="dk-brand">
+      <span>Excavator<b>VR</b></span>
+      <span>04 / {total}</span>
+    </p>
+    <p class="kick kick--top">{k.vrK} · {d.controls.kicker}</p>
+    <h2 class="h-wide">{d.controls.title}</h2>
+    <div class="ctrl">
+      <div class="ctrl__text">
+        <div class="ctrl__modes">
+          <div>
+            <h3>{d.controls.smart.t}</h3>
+            <p class="body body--dim">{d.controls.smart.d}</p>
+          </div>
+          <div>
+            <h3>{d.controls.classic.t}</h3>
+            <p class="body body--dim">{d.controls.classic.d}</p>
+          </div>
+        </div>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>{p.excavatorClassic}</th>
+              <th>{p.action}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              p.rows.classic.map(([a, b]) => (
+                <tr>
+                  <th>{a}</th>
+                  <td>{b}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        <div class="ctrl__close">
+          <figure>
+            <Image src={img('cab_ex20_joystick')} width={700} alt="" loading="eager" quality={84} />
+            <figcaption>{d.cab.ex.find((it) => it.id === 'joyR')?.t}</figcaption>
+          </figure>
+          <figure>
+            <Image src={img('cab_ex20_monitor')} width={700} alt="" loading="eager" quality={84} />
+            <figcaption>{d.cab.ex.find((it) => it.id === 'monitor')?.t}</figcaption>
+          </figure>
+        </div>
+      </div>
+      <figure class="ctrl__pic">
+        <Image src={img('cab_ex20')} width={1700} alt="" loading="eager" quality={84} />
+        <figcaption>
+          <b>{d.cab.title}</b>
+          {d.cab.lead}
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 5. VR: three views -->
+  <section class="slide">
+    <p class="dk-brand">
+      <span>Excavator<b>VR</b></span>
+      <span>05 / {total}</span>
+    </p>
+    <p class="kick kick--top">{k.vrK} · {d.views.kicker}</p>
+    <h2 class="h-wide">{d.views.title}</h2>
+    <div class="views3">
+      <figure>
+        <div class="views3__pic"><Image src={img('ex20_cabview')} width={1100} alt="" loading="eager" quality={84} /></div>
+        <figcaption>
+          <b>01</b>
+          <h3>{d.views.cab.t}</h3>
+          <p>{d.views.cab.d}</p>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="views3__pic views3__pic--cut"><Image src={img('ex20_low')} width={1100} alt="" loading="eager" quality={84} /></div>
+        <figcaption>
+          <b>02</b>
+          <h3>{d.views.spotter.t}</h3>
+          <p>{d.views.spotter.d}</p>
+        </figcaption>
+      </figure>
+      <figure>
+        <div class="views3__pic"><img src={url('video/clip-sky.jpg')} alt="" /></div>
+        <figcaption>
+          <b>03</b>
+          <h3>{d.views.sky.t}</h3>
+          <p>{d.views.sky.d}</p>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 6. multiplayer: one site, four operators -->
+  <section class="slide">
+    <p class="dk-brand">
+      <span>Excavator<b>VR</b></span>
+      <span>06 / {total}</span>
+    </p>
+    <p class="kick kick--top">{k.mpK}</p>
+    <div class="mp">
+      <div class="mp__head">
+        <h2>{d.together.title}</h2>
+        <p class="body">{d.together.lead}</p>
+      </div>
+      <div class="mp__how">
+        <p class="kick">{k.mpHowK}</p>
+        <ol class="nums nums--tight">
+          {k.mpHow.map((it) => <li>{it}</li>)}
+        </ol>
+        <p class="tag">
+          <span>{d.together.status}</span>
+          {d.together.note}
+        </p>
+      </div>
+      <figure class="mp__crew">
+        <Image src={img('vr_crew')} width={2800} alt="" loading="eager" quality={84} />
+        <figcaption>{d.together.crew}</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 7. multiplayer: why together -->
+  <section class="slide">
+    <p class="dk-brand">
+      <span>Excavator<b>VR</b></span>
+      <span>07 / {total}</span>
+    </p>
+    <p class="kick kick--top">{k.mpK} · {k.whyK}</p>
+    <div class="crew">
+      <div class="crew__text">
+        <h2>{k.whyT}</h2>
+        <p class="body">{k.why}</p>
+        <ul class="dk-ticks">
+          {[...d.together.items, ...k.mpMore].map((it) => <li>{it}</li>)}
+        </ul>
+      </div>
+      <div class="crew__site">
+        <div class="crew__machines">
+          <div class="crew__m crew__m--a"><Image src={img('ex20_34')} width={1000} alt="" loading="eager" quality={84} /></div>
+          <div class="crew__m crew__m--b"><Image src={img('truck_34')} width={1000} alt="" loading="eager" quality={84} /></div>
+          <div class="crew__m crew__m--c"><Image src={img('ex20_red')} width={1000} alt="" loading="eager" quality={84} /></div>
+        </div>
+        <p class="kick">{k.rolesK}</p>
+        <dl class="roles">
+          {
+            k.roles.map(([who, what], i) => (
+              <div>
+                <dt>
+                  <i style={`background:${crewColors[i]}`} />
+                  {who}
+                </dt>
+                <dd>{what}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. physics and ground -->
+  <section class="slide">
+    <p class="dk-brand">
+      <span>Excavator<b>VR</b></span>
+      <span>08 / {total}</span>
+    </p>
+    <p class="kick kick--top">{d.feel.kicker} · {d.ground.kicker}</p>
+    <h2 class="h-wide">{d.feel.title}</h2>
+    <div class="phys">
+      <ol class="figs">
+        {
+          d.feel.items.map((it) => (
+            <li>
+              <b>{it.fig}</b>
+              <small>{it.figl}</small>
+              <h3>{it.t}</h3>
+              <p>{it.d}</p>
+            </li>
+          ))
+        }
+        <li class="figs__pic"><Image src={img('ex80_low')} width={1500} alt="" loading="eager" quality={84} /></li>
+      </ol>
+      <div class="phys__ground">
+        <div class="dk-strata">
+          {
+            layers.map((l) => (
+              <i style={`background:${l.color};flex:${Math.sqrt(l.bottom / shown) - Math.sqrt(l.top / shown)}`}>
+                {Math.sqrt(l.bottom / shown) - Math.sqrt(l.top / shown) > 0.07 ? d.ground.layers[l.id][0] : ''}
+              </i>
+            ))
+          }
+        </div>
+        <div>
+          <h3>{d.ground.title}</h3>
+          <dl class="mini">
+            {
+              d.ground.facts.slice(0, 3).map(([v, l]) => (
+                <div>
+                  <dt>{v}</dt>
+                  <dd>{l}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          <p class="body body--dim" style="margin-top:3mm">{d.ground.conserve}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. the fleet -->
+  <section class="slide">
+    <p class="dk-brand">
+      <span>Excavator<b>VR</b></span>
+      <span>09 / {total}</span>
+    </p>
+    <p class="kick kick--top">{d.fleet.kicker}</p>
+    <div class="fleet__head">
+      <h2>{d.fleet.title}</h2>
+      <p class="body body--dim">{d.fleet.lead}</p>
+    </div>
+    <div class="fleet">
+      {
+        machines.map((m) => (
+          <article class:list={['fm', `fm--${m.id}`]} style={`--accent:${m.accent}`}>
+            <div class="fm__pic">
+              <Image src={img(`${m.id}_34`)} width={800} alt="" loading="eager" quality={82} />
+            </div>
+            <h3>{d.fleet.names[m.id][0]}</h3>
+            <dl>
+              {m.headline.slice(0, 2).map((s) => {
+                const v = specValue(d, s);
+                return (
+                  <div>
+                    <dt>{label(s.key)}</dt>
+                    <dd>
+                      {v.value}
+                      <small>{v.unit}</small>
+                    </dd>
+                  </div>
+                );
+              })}
+            </dl>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 10. data and status -->
+  <section class="slide">
+    <p class="dk-brand">
+      <span>Excavator<b>VR</b></span>
+      <span>10 / {total}</span>
+    </p>
+    <p class="kick kick--top">{d.proof.kicker}</p>
+    <h2 class="h-wide">{d.proof.title}</h2>
+    <div class="data">
+      <dl class="data__nums">
+        {
+          d.proof.items.map(([v, l]) => (
+            <div>
+              <dt>{v}</dt>
+              <dd>{l}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <div class="data__cols">
+        <table class="tbl tbl--plain">
+          <tbody>
+            {
+              d.proof.table.map(([a, b]) => (
+                <tr>
+                  <th>{a}</th>
+                  <td>{b}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        <div>
+          <p class="kick">{d.proof.statusTitle}</p>
+          <dl class="status3">
+            {
+              d.proof.status.map(([a, b], i) => (
+                <div class={`status3--${i}`}>
+                  <dt>{a}</dt>
+                  <dd>{b}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. closing -->
+  <section class="slide dk-end">
+    <div class="dk-end__pic">
+      <Image src={img('hero_teeth')} width={2000} alt="" loading="eager" quality={84} />
+    </div>
+    <p class="dk-brand">
+      <span>Excavator<b>VR</b></span>
+      <span>11 / {total}</span>
+    </p>
+    <div class="dk-end__text">
+      <p class="kick">{k.closeK}</p>
+      <h1>
+        {d.closing.title}
+        <em>{d.closing.lead}</em>
+      </h1>
+      <div class="dk-end__link">
+        <div class="qr qr--big">
+          <div class="qr__code" set:html={qr} />
+          <p>
+            <span>{k.scan}</span>
+            <b>{home}</b>
+          </p>
+        </div>
+        <p class="body">{k.link}</p>
+        {hasContact() && <p class="dk-end__contact">{contact.join(' · ')}</p>}
+      </div>
+    </div>
+    <p class="fine">{d.footer.generic} {d.film.note}</p>
+  </section>
+</Base>

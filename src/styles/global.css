@@ -2434,3 +2434,138 @@ kbd.is-down {
     width: 6.4rem;
   }
 }
+
+/* ---------- vr: the training place ---------- */
+
+.vr__stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.2rem, 5vw, 7rem);
+  align-items: end;
+  max-width: 70rem;
+  margin-inline: auto;
+  margin-top: clamp(2rem, 4.5vw, 4.5rem);
+}
+.vr__stage::before {
+  content: '';
+  position: absolute;
+  inset: 4% 0 14%;
+  background: radial-gradient(48% 55% at 50% 58%, rgba(242, 183, 5, 0.13), transparent 72%);
+  pointer-events: none;
+}
+.vr__stage figure {
+  position: relative;
+}
+.vr__stage picture {
+  display: block;
+}
+.vr__stage img {
+  width: 100%;
+  filter: drop-shadow(0 1.6rem 1.6rem rgba(0, 0, 0, 0.6));
+}
+.vr__stage img {
+  height: clamp(17rem, 42vw, 38rem);
+  object-fit: contain;
+  object-position: bottom;
+}
+.vr__stage figcaption {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 1.1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line-2);
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  text-wrap: pretty;
+}
+.vr__stage figcaption b {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--yellow);
+}
+.vr__row {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 1fr);
+  gap: clamp(1.2rem, 3.4vw, 4rem);
+  align-items: center;
+  margin-top: clamp(2rem, 4.5vw, 4.5rem);
+}
+.vr__points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid var(--line-2);
+}
+.vr__points li {
+  padding: clamp(1.2rem, 2.2vw, 2.2rem) clamp(0.9rem, 1.8vw, 2rem) 0;
+  border-left: 1px solid var(--line);
+}
+.vr__points li:first-child {
+  border-left: 0;
+  padding-left: 0;
+}
+.vr__points b {
+  display: block;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 4.4vw, 4.6rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.vr__points p {
+  margin-top: 0.9rem;
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  text-wrap: pretty;
+}
+.vr__headset img {
+  width: 100%;
+  filter: drop-shadow(0 1.2rem 1.4rem rgba(0, 0, 0, 0.6));
+}
+
+.together__crew {
+  margin-top: clamp(2.5rem, 6vw, 6rem);
+}
+.together__crew img {
+  width: 100%;
+  filter: drop-shadow(0 1.6rem 1.6rem rgba(0, 0, 0, 0.6));
+}
+.together__crew figcaption {
+  margin-top: 1.1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--line-2);
+  color: var(--ink-2);
+  font-size: 0.95rem;
+  max-width: 46rem;
+  text-wrap: pretty;
+}
+
+@media (max-width: 900px) {
+  .vr__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .vr__stage {
+    gap: 0.9rem;
+  }
+  .vr__stage figcaption {
+    font-size: 0.85rem;
+  }
+  .vr__points {
+    grid-template-columns: minmax(0, 1fr);
+    border-top: 0;
+  }
+  .vr__points li,
+  .vr__points li:first-child {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding: 1.2rem 0 1rem;
+  }
+  .vr__headset {
+    max-width: 20rem;
+    margin-inline: auto;
+  }
+}
